@@ -1,3 +1,3 @@
-const prueba: string = "popo";
+const prueba: string = "caca";
 
 console.log(prueba);
