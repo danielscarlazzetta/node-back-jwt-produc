@@ -23,7 +23,17 @@
     -npm install typescript --save-dev(Luego de instalarlo iremos a tsconfig.json, iremos a outDir y lo remplazamos por "outDir": "./dist")
     -npm install nodemon --save-dev
 
+    -npm i --save-dev @types/express
+
 # Instaladas las dependencias creamos la carpeta src y creamos un index.ts para realizar las pruebas de ts.
 
-    - Ejecutamos node .\dist\index.js y esta deberia ejecutar lo se creo.
-    - Ejecutamos npx nodemon .\dist\index.js y ya esta lebantado
+    - Ejecutamos node .\dist\index.js 
+    - Ejecutamos npx nodemon .\dist\index.js
+
+# Creacion de caprteas para este modelo
+
+    -controllers
+    -db
+    -models
+    -routes
+

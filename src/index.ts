@@ -1,3 +1,7 @@
-const prueba: string = "caca";
+import dotenv from "dotenv";
+import Server from "./models/server.models";
 
-console.log(prueba);
+//Configuramos dotenv
+dotenv.config();
+
+const server = new Server();
