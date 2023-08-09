@@ -24,6 +24,7 @@
     -npm install nodemon --save-dev
 
     -npm i --save-dev @types/express
+    -npm i --save-dev @types/bcrypt
 
 # Instaladas las dependencias creamos la carpeta src y creamos un index.ts para realizar las pruebas de ts.
 

@@ -16,6 +16,7 @@ const express_1 = __importDefault(require("express"));
 const product_routes_1 = __importDefault(require("../routes/product.routes"));
 const user_routes_1 = __importDefault(require("../routes/user.routes"));
 const product_models_1 = require("./product.models");
+const user_models_1 = require("./user.models");
 class Server {
     constructor() {
         this.app = (0, express_1.default)();
@@ -41,6 +42,7 @@ class Server {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 yield product_models_1.Product.sync();
+                yield user_models_1.User.sync();
                 console.log('Connection has been stablished successfully. =D');
             }
             catch (error) {

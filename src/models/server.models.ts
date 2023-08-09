@@ -1,8 +1,8 @@
 import express from 'express';
-import routesProduct from '../routes/product.routes'
-import routesUsers from '../routes/user.routes'
-import sequelizer from '../db/connection.db';
+import routesProduct from '../routes/product.routes';
+import routesUsers from '../routes/user.routes';
 import { Product } from './product.models';
+import { User } from './user.models';
 
 
 class Server {
@@ -34,9 +34,10 @@ class Server {
         this.app.use(express.json())
     }
 
-    async dbConnect(){
+    async dbConnect(){ 
         try{
             await Product.sync();
+            await User.sync();
             console.log('Connection has been stablished successfully. =D')
         }catch(error){
             console.error('Unable to connect to the DataBase: ', error);
