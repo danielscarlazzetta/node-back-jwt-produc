@@ -9,8 +9,33 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getProduct = void 0;
+exports.getProduct = exports.newProduct = void 0;
 const product_models_1 = require("../models/product.models");
+const newProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { name, description, price, amount, category } = req.body;
+    const nname = yield product_models_1.Product.findOne({ where: { name: name } });
+    const existingFields = [];
+    try {
+        if (nname)
+            existingFields.push();
+        yield product_models_1.Product.create({
+            name: name,
+            description: description,
+            price: price,
+            amount: amount,
+            category: category
+        });
+        res.json({
+            msg: "productor creado con exito!",
+        });
+    }
+    catch (err) {
+        res.status(400).json({
+            msg: `${nname} ya existe`,
+        });
+    }
+});
+exports.newProduct = newProduct;
 const getProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const listProducts = yield product_models_1.Product.findAll();
     res.json(listProducts);

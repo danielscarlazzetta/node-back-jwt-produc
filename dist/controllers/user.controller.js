@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginUser = exports.newUser = void 0;
+exports.loginUser = exports.getUser = exports.newUser = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const user_models_1 = require("../models/user.models");
 const newUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -52,6 +52,14 @@ const newUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.newUser = newUser;
+const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const listUser = yield user_models_1.User.findAll();
+    res.json(listUser);
+    // res.json({
+    //     msg: 'Get Products'
+    // });
+});
+exports.getUser = getUser;
 const loginUser = (req, res) => {
     //console.log(req.body);
     res.json({

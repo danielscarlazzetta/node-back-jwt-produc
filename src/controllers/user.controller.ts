@@ -42,6 +42,17 @@ export const newUser = async (req : Request, res : Response) => {
     }
 }
 
+export const getUser = async (req : Request, res : Response) => {
+
+    const listUser = await User.findAll();
+
+    res.json(listUser );
+
+    // res.json({
+    //     msg: 'Get Products'
+    // });
+}
+
 export const loginUser = (req : Request, res : Response) => {
     
     //console.log(req.body);
