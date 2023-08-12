@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 import bcrypt, { hash } from 'bcrypt';
-import { User } from "../models/user.models";
+import { User } from '../models/user.models';
+import jwt from 'jsonwebtoken';
 
 
 export const newUser = async (req : Request, res : Response) => {
     
-    const { name, username, password, email, phone, address , typeofuser  } = req.body;
+    const { name, username, password, email, phone, address , typeofuser } = req.body;
 
     const user = await User.findOne({where: {username : username} });
     const mail = await User.findOne({where: {email : email} });
@@ -42,23 +43,67 @@ export const newUser = async (req : Request, res : Response) => {
     }
 }
 
-export const getUser = async (req : Request, res : Response) => {
+export const getAllUser = async (req : Request, res : Response) => {
 
     const listUser = await User.findAll();
-
     res.json(listUser );
 
-    // res.json({
-    //     msg: 'Get Products'
-    // });
 }
 
-export const loginUser = (req : Request, res : Response) => {
+export const loginUser = async (req : Request, res : Response) => {
     
-    //console.log(req.body);
+    const { username, password } = req.body;
+    const userName: any = await User.findOne({where: {username : username} });
 
-    res.json({
-        msg: 'Login User',
-        body: req.body
-    })
+    try {
+        if(!userName){
+            return res.status(400).json({
+                msg: `no existe en la base de datos`,
+            });
+        };
+     
+        const passwordValid = await bcrypt.compare(password, userName.password);
+    
+        if(!passwordValid){
+            return res.status(400).json({
+                msg: `password incorrecto`,
+            });
+        }
+    
+        const token = jwt.sign({
+            username: username
+        }, process.env.SECRET_KEY || '634kjbOHs99hSSDkn');
+    
+        res.json({token});
+    } catch (error) {
+        res.json({
+            msg: `error`
+        })
+    }
+
+    
+}
+
+
+
+
+export const loginUser2 = async (req : Request, res : Response) => {
+    
+    const { username, email, password } = req.body;
+    const userName: any = await User.findOne({where: {username : username} });
+    const emailCorreo = await User.findOne({where: {email : email} });
+
+    if(!userName || !emailCorreo){
+        return res.status(400).json({
+            msg: `no existe en la base de datos`,
+        });
+    };
+ 
+    const passwordValid = await bcrypt.compare(password, userName.password);
+
+    if(!passwordValid){
+        return res.status(400).json({
+            msg: `password incorrecto`,
+        });
+    }
 }

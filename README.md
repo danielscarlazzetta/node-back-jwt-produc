@@ -25,6 +25,7 @@
 
     -npm i --save-dev @types/express
     -npm i --save-dev @types/bcrypt
+    -npm i --save-dev @types/jsonwebtoken
 
 # Instaladas las dependencias creamos la carpeta src y creamos un index.ts para realizar las pruebas de ts.
 

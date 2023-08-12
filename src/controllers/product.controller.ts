@@ -4,29 +4,26 @@ import { Product } from "../models/product.models";
 
 export const getProduct = async (req : Request, res : Response) => {
 
-    const listProducts = await Product.findAll();
+    try{
+        const listProducts = await Product.findAll();
+        res.json(listProducts);
 
-    res.json(listProducts);
-
-    // res.json({
-    //     msg: 'Get Products'
-    // });
+    }catch(err){
+        res.status(400).json({
+            msg: `${err}`,
+          });
+    }
 };
 
 export const newProduct = async (req : Request, res : Response) => {
 
     const { name, description, price, amount, category  } = req.body;
 
-    const nname = await Product.findOne({where: {name : name}})
-    
-    // const existingFields: any = [];
-
     try{
-        if(nname) {
-            res.json(`${name} ya existe`);
+        const existingProduct  = await Product.findOne({where: {name : name}})
+        if(existingProduct ) {
+           return res.json(`${name} ya existe`);
         }
-        // if (nname) existingFields.push();
-
         await Product.create({
             name: name,
             description : description,
@@ -34,13 +31,15 @@ export const newProduct = async (req : Request, res : Response) => {
             amount: amount,
             category: category
         });
-        res.json({
-            msg: "productor creado con exito!",
+
+        return res.json({
+            msg: "Producto creado con éxito!",
         });
+
     }catch(err){
-        res.status(400).json({
-            //msg: `${nname} ya existe`,
+        return res.status(400).json({
             msg: `Error`,
+            err,
           });
     }
 };

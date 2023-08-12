@@ -12,9 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginUser = exports.getUser = exports.newUser = void 0;
+exports.loginUser2 = exports.loginUser = exports.getAllUser = exports.newUser = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const user_models_1 = require("../models/user.models");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const newUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, username, password, email, phone, address, typeofuser } = req.body;
     const user = yield user_models_1.User.findOne({ where: { username: username } });
@@ -52,19 +53,54 @@ const newUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.newUser = newUser;
-const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const listUser = yield user_models_1.User.findAll();
     res.json(listUser);
-    // res.json({
-    //     msg: 'Get Products'
-    // });
 });
-exports.getUser = getUser;
-const loginUser = (req, res) => {
-    //console.log(req.body);
-    res.json({
-        msg: 'Login User',
-        body: req.body
-    });
-};
+exports.getAllUser = getAllUser;
+const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { username, password } = req.body;
+    const userName = yield user_models_1.User.findOne({ where: { username: username } });
+    try {
+        if (!userName) {
+            return res.status(400).json({
+                msg: `no existe en la base de datos`,
+            });
+        }
+        ;
+        const passwordValid = yield bcrypt_1.default.compare(password, userName.password);
+        if (!passwordValid) {
+            return res.status(400).json({
+                msg: `password incorrecto`,
+            });
+        }
+        const token = jsonwebtoken_1.default.sign({
+            username: username
+        }, process.env.SECRET_KEY || '634kjbOHs99hSSDkn');
+        res.json({ token });
+    }
+    catch (error) {
+        res.json({
+            msg: `error`
+        });
+    }
+});
 exports.loginUser = loginUser;
+const loginUser2 = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { username, email, password } = req.body;
+    const userName = yield user_models_1.User.findOne({ where: { username: username } });
+    const emailCorreo = yield user_models_1.User.findOne({ where: { email: email } });
+    if (!userName || !emailCorreo) {
+        return res.status(400).json({
+            msg: `no existe en la base de datos`,
+        });
+    }
+    ;
+    const passwordValid = yield bcrypt_1.default.compare(password, userName.password);
+    if (!passwordValid) {
+        return res.status(400).json({
+            msg: `password incorrecto`,
+        });
+    }
+});
+exports.loginUser2 = loginUser2;

@@ -12,22 +12,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.newProduct = exports.getProduct = void 0;
 const product_models_1 = require("../models/product.models");
 const getProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const listProducts = yield product_models_1.Product.findAll();
-    res.json(listProducts);
-    // res.json({
-    //     msg: 'Get Products'
-    // });
+    try {
+        const listProducts = yield product_models_1.Product.findAll();
+        res.json(listProducts);
+    }
+    catch (err) {
+        res.status(400).json({
+            msg: `${err}`,
+        });
+    }
 });
 exports.getProduct = getProduct;
 const newProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, description, price, amount, category } = req.body;
-    const nname = yield product_models_1.Product.findOne({ where: { name: name } });
-    // const existingFields: any = [];
     try {
-        if (nname) {
-            res.json(`${name} ya existe`);
+        const existingProduct = yield product_models_1.Product.findOne({ where: { name: name } });
+        if (existingProduct) {
+            return res.json(`${name} ya existe`);
         }
-        // if (nname) existingFields.push();
         yield product_models_1.Product.create({
             name: name,
             description: description,
@@ -35,14 +37,14 @@ const newProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             amount: amount,
             category: category
         });
-        res.json({
-            msg: "productor creado con exito!",
+        return res.json({
+            msg: "Producto creado con éxito!",
         });
     }
     catch (err) {
-        res.status(400).json({
-            //msg: `${nname} ya existe`,
+        return res.status(400).json({
             msg: `Error`,
+            err,
         });
     }
 });
