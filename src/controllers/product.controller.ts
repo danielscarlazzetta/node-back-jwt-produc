@@ -1,16 +1,31 @@
-import { Request, Response } from "express" 
-import { Product } from "../models/product.models"
+import { Request, Response } from "express";
+import { Product } from "../models/product.models";
+
+
+export const getProduct = async (req : Request, res : Response) => {
+
+    const listProducts = await Product.findAll();
+
+    res.json(listProducts);
+
+    // res.json({
+    //     msg: 'Get Products'
+    // });
+};
 
 export const newProduct = async (req : Request, res : Response) => {
 
     const { name, description, price, amount, category  } = req.body;
 
     const nname = await Product.findOne({where: {name : name}})
-
-    const existingFields: any = [];
+    
+    // const existingFields: any = [];
 
     try{
-        if (nname) existingFields.push();
+        if(nname) {
+            res.json(`${name} ya existe`);
+        }
+        // if (nname) existingFields.push();
 
         await Product.create({
             name: name,
@@ -24,18 +39,8 @@ export const newProduct = async (req : Request, res : Response) => {
         });
     }catch(err){
         res.status(400).json({
-            msg: `${nname} ya existe`,
+            //msg: `${nname} ya existe`,
+            msg: `Error`,
           });
     }
-}
-
-export const getProduct = async (req : Request, res : Response) => {
-
-    const listProducts = await Product.findAll();
-
-    res.json(listProducts);
-
-    // res.json({
-    //     msg: 'Get Products'
-    // });
-}
+};
