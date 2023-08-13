@@ -76,7 +76,7 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
         const token = jsonwebtoken_1.default.sign({
             username: username
-        }, process.env.SECRET_KEY || '634kjbOHs99hSSDkn');
+        }, process.env.SECRET_KEY || '634kjbOHs99hSSDkn', { expiresIn: '100000' });
         res.json({ token });
     }
     catch (error) {
