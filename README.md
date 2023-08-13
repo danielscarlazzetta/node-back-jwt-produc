@@ -39,3 +39,8 @@
     -models
     -routes
 
+
+# Definiciones del CRUD
+
+    -getAll 
+    -

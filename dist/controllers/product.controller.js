@@ -9,20 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newProduct = exports.getProduct = void 0;
+exports.deleteProduct = exports.updateProduct = exports.getIdProduct = exports.getProduct = exports.newProduct = void 0;
 const product_models_1 = require("../models/product.models");
-const getProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const listProducts = yield product_models_1.Product.findAll();
-        res.json(listProducts);
-    }
-    catch (err) {
-        res.status(400).json({
-            msg: `${err}`,
-        });
-    }
-});
-exports.getProduct = getProduct;
 const newProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, description, price, amount, category } = req.body;
     try {
@@ -49,3 +37,85 @@ const newProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.newProduct = newProduct;
+const getProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const listProducts = yield product_models_1.Product.findAll();
+        res.json(listProducts);
+    }
+    catch (err) {
+        res.status(400).json({
+            msg: `${err}`,
+        });
+    }
+});
+exports.getProduct = getProduct;
+const getIdProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const productId = req.params.id;
+    console.log(productId);
+    try {
+        const product = yield product_models_1.Product.findByPk(productId);
+        if (!product) {
+            return res.status(404).json({
+                msg: `Producto no encontrado`,
+            });
+        }
+        res.json(product);
+    }
+    catch (err) {
+        console.error('Error al obtener el producto:', err);
+        res.status(500).json({
+            msg: `Error al obtener el producto`,
+            err,
+        });
+    }
+});
+exports.getIdProduct = getIdProduct;
+const updateProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const productId = req.params.id;
+    const { name, description, price, amount, category } = req.body;
+    try {
+        const product = yield product_models_1.Product.findByPk(productId);
+        if (!product) {
+            return res.status(404).json({
+                msg: `Producto no encontrado`,
+            });
+        }
+        yield product.update({
+            name: name,
+            description: description,
+            price: price,
+            amount: amount,
+            category: category,
+        });
+        res.json({
+            msg: `Producto ${name} actualizado con éxito`,
+        });
+    }
+    catch (err) {
+        res.status(500).json({
+            msg: `Error al actualizar el producto`,
+        });
+    }
+});
+exports.updateProduct = updateProduct;
+const deleteProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const productId = req.params.id;
+    try {
+        const product = yield product_models_1.Product.findByPk(productId);
+        if (!product) {
+            return res.status(404).json({
+                msg: `Producto no encontrado`,
+            });
+        }
+        yield product.destroy();
+        res.json({
+            msg: `Producto eliminado con éxito`,
+        });
+    }
+    catch (err) {
+        res.status(500).json({
+            msg: `Error al eliminar el producto`,
+        });
+    }
+});
+exports.deleteProduct = deleteProduct;

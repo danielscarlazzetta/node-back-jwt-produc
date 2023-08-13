@@ -72,38 +72,93 @@ export const loginUser = async (req: Request, res: Response) => {
 
         const token = jwt.sign({
             username: username
-        }, process.env.SECRET_KEY || '634kjbOHs99hSSDkn', { expiresIn: '100000'});
+        }, process.env.SECRET_KEY || '634kjbOHs99hSSDkn', { expiresIn: '10000000'});//10000
 
         res.json({ token });
+        
     } catch (error) {
         res.json({
             msg: `error`
-        })
-    }
-
-
-}
-
-
-
-
-export const loginUser2 = async (req: Request, res: Response) => {
-
-    const { username, email, password } = req.body;
-    const userName: any = await User.findOne({ where: { username: username } });
-    const emailCorreo = await User.findOne({ where: { email: email } });
-
-    if (!userName || !emailCorreo) {
-        return res.status(400).json({
-            msg: `no existe en la base de datos`,
-        });
-    };
-
-    const passwordValid = await bcrypt.compare(password, userName.password);
-
-    if (!passwordValid) {
-        return res.status(400).json({
-            msg: `password incorrecto`,
         });
     }
 }
+
+export const getIdUsers = async (req : Request, res : Response) => {
+
+    const userId = req.params.id;
+
+    try {
+        const user = await User.findByPk(userId);
+        if (!user) {
+            return res.status(404).json({
+                msg: `Producto no encontrado`,
+            });
+        }
+
+        res.json(user);
+    } catch (err) {
+        console.error('Error al obtener el usuario:', err);
+        res.status(500).json({
+            msg: `Error al obtener el usuario`,
+            err,
+        });
+    }
+};
+
+export const updateUser = async (req : Request, res : Response) => {
+    const userId = req.params.id;
+    const { name, username, password, email, phone, address, typeofuser } = req.body;
+
+    try {
+        const user = await User.findByPk(userId);
+        if (!user) {
+            return res.status(404).json({
+                msg: `Producto no encontrado`,
+            });
+        }
+
+        await user.update({
+            name: name,
+            username: username,
+            password: password,
+            email: email,
+            phone: phone,
+            address: address,
+            typeofuser: typeofuser
+        });
+
+        res.json({
+            msg: `Usuario ${username} actualizado con éxito`,
+        });
+    } catch (err) {
+        res.status(500).json({
+            msg: `Error al actualizar el usuario`,
+        });
+    }
+};
+
+export const deleteUser = async (req : Request, res : Response) => {
+    const userId = req.params.id;
+
+    try {
+        const user = await User.findByPk(userId);
+        if (!user) {
+            return res.status(404).json({
+                msg: `Usuario no encontrado`,
+            });
+        }
+
+        await user.destroy();
+
+        res.json({
+            msg: `Usuario eliminado con éxito`,
+        });
+    } catch (err) {
+        res.status(500).json({
+            msg: `Error al eliminar el usuario`,
+        });
+    }
+};
+
+
+
