@@ -22,24 +22,18 @@ const newUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield user_models_1.User.findOne({ where: { username: username } });
     const mail = yield user_models_1.User.findOne({ where: { email: email } });
     const hone = yield user_models_1.User.findOne({ where: { phone: phone } });
-    if (!validator_1.default.isAlphanumeric(name)) {
-        return res.status(400).json({
-            msg: `El nombre debe contener solo letras y números`,
-        });
+    const fieldsToValidate = [
+        { value: name, fieldName: 'nombre' },
+        { value: username, fieldName: 'username' },
+        { value: address, fieldName: 'dirección' }
+    ];
+    for (const field of fieldsToValidate) {
+        if (!validator_1.default.isAlphanumeric(field.value)) {
+            return res.status(400).json({
+                msg: `El ${field.fieldName} debe contener solo letras y números`,
+            });
+        }
     }
-    ;
-    if (!validator_1.default.isAlphanumeric(username)) {
-        return res.status(400).json({
-            msg: `El username debe contener solo letras y números`,
-        });
-    }
-    ;
-    if (!validator_1.default.isAlphanumeric(address)) {
-        return res.status(400).json({
-            msg: `La direccion debe contener solo letras y números`,
-        });
-    }
-    ;
     const hashPassword = yield bcrypt_1.default.hash(password, 10);
     const existingFields = [];
     try {

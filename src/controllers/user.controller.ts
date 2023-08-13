@@ -12,22 +12,20 @@ export const newUser = async (req: Request, res: Response) => {
     const user = await User.findOne({ where: { username: username } });
     const mail = await User.findOne({ where: { email: email } });
     const hone = await User.findOne({ where: { phone: phone } });
-
-    if (!validator.isAlphanumeric(name)) {
-        return res.status(400).json({
-            msg: `El nombre debe contener solo letras y números`,
-        });
-    };
-    if (!validator.isAlphanumeric(username)) {
-        return res.status(400).json({
-            msg: `El username debe contener solo letras y números`,
-        });
-    };
-    if (!validator.isAlphanumeric(address)) {
-        return res.status(400).json({
-            msg: `La direccion debe contener solo letras y números`,
-        });
-    };
+    
+    const fieldsToValidate = [
+        { value: name, fieldName: 'nombre' },
+        { value: username, fieldName: 'username' },
+        { value: address, fieldName: 'dirección' }
+    ];
+    
+    for (const field of fieldsToValidate) {
+        if (!validator.isAlphanumeric(field.value)) {
+            return res.status(400).json({
+                msg: `El ${field.fieldName} debe contener solo letras y números`,
+            });
+        }
+    }
 
 
     const hashPassword = await bcrypt.hash(password, 10);
