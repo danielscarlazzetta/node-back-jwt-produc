@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import bcrypt, { hash } from 'bcrypt';
 import { User } from '../models/user.models';
 import jwt from 'jsonwebtoken';
+import validator from 'validator';
 
 
 export const newUser = async (req: Request, res: Response) => {
@@ -11,6 +12,22 @@ export const newUser = async (req: Request, res: Response) => {
     const user = await User.findOne({ where: { username: username } });
     const mail = await User.findOne({ where: { email: email } });
     const hone = await User.findOne({ where: { phone: phone } });
+
+    if (!validator.isAlphanumeric(name)) {
+        return res.status(400).json({
+            msg: `El nombre debe contener solo letras y números`,
+        });
+    };
+    if (!validator.isAlphanumeric(username)) {
+        return res.status(400).json({
+            msg: `El username debe contener solo letras y números`,
+        });
+    };
+    if (!validator.isAlphanumeric(address)) {
+        return res.status(400).json({
+            msg: `La direccion debe contener solo letras y números`,
+        });
+    };
 
 
     const hashPassword = await bcrypt.hash(password, 10);
@@ -54,6 +71,11 @@ export const loginUser = async (req: Request, res: Response) => {
 
     const { username, password } = req.body;
     const userName: any = await User.findOne({ where: { username: username } });
+    if (!validator.isAlphanumeric(username)) {
+        return res.status(400).json({
+            msg: `El nombre debe contener solo letras y números`,
+        });
+    };
 
     try {
         if (!userName) {
@@ -109,6 +131,22 @@ export const updateUser = async (req : Request, res : Response) => {
     const userId = req.params.id;
     const { name, username, password, email, phone, address, typeofuser } = req.body;
 
+    if (!validator.isAlphanumeric(name)) {
+        return res.status(400).json({
+            msg: `El nombre debe contener solo letras y números`,
+        });
+    };
+    if (!validator.isAlphanumeric(username)) {
+        return res.status(400).json({
+            msg: `El username debe contener solo letras y números`,
+        });
+    };
+    if (!validator.isAlphanumeric(address)) {
+        return res.status(400).json({
+            msg: `La direccion debe contener solo letras y números`,
+        });
+    };
+    
     try {
         const user = await User.findByPk(userId);
         if (!user) {

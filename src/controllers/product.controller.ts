@@ -1,9 +1,22 @@
 import { Request, Response } from "express";
 import { Product } from "../models/product.models";
+import validator from 'validator';
 
 export const newProduct = async (req : Request, res : Response) => {
 
     const { name, description, price, amount, category  } = req.body;
+
+    if (!validator.isAlphanumeric(name)) {
+        return res.status(400).json({
+            msg: `El nombre debe contener solo letras y números`,
+        });
+    };
+    if (!validator.isAlphanumeric(description)) {
+        return res.status(400).json({
+            msg: `El nombre debe contener solo letras y números`,
+        });
+    }
+
 
     try{
         const existingProduct  = await Product.findOne({where: {name : name}})
@@ -70,6 +83,18 @@ export const getIdProduct = async (req : Request, res : Response) => {
 export const updateProduct = async (req : Request, res : Response) => {
     const productId = req.params.id;
     const { name, description, price, amount, category } = req.body;
+    
+    if (!validator.isAlphanumeric(name)) {
+        return res.status(400).json({
+            msg: `El nombre debe contener solo letras y números`,
+        });
+    };
+    if (!validator.isAlphanumeric(description)) {
+        return res.status(400).json({
+            msg: `El nombre debe contener solo letras y números`,
+        });
+    }
+    
 
     try {
         const product = await Product.findByPk(productId);

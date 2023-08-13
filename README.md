@@ -17,6 +17,8 @@
     -npm install jsonwebtoken
     -npm install sequelize 
     -npm install mysql2
+    -npm install validator
+
 
 # Dependencias Desarrollo:
 

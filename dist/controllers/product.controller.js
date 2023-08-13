@@ -8,11 +8,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteProduct = exports.updateProduct = exports.getIdProduct = exports.getProduct = exports.newProduct = void 0;
 const product_models_1 = require("../models/product.models");
+const validator_1 = __importDefault(require("validator"));
 const newProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, description, price, amount, category } = req.body;
+    if (!validator_1.default.isAlphanumeric(name)) {
+        return res.status(400).json({
+            msg: `El nombre debe contener solo letras y números`,
+        });
+    }
+    ;
+    if (!validator_1.default.isAlphanumeric(description)) {
+        return res.status(400).json({
+            msg: `El nombre debe contener solo letras y números`,
+        });
+    }
     try {
         const existingProduct = yield product_models_1.Product.findOne({ where: { name: name } });
         if (existingProduct) {
@@ -73,6 +88,17 @@ exports.getIdProduct = getIdProduct;
 const updateProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const productId = req.params.id;
     const { name, description, price, amount, category } = req.body;
+    if (!validator_1.default.isAlphanumeric(name)) {
+        return res.status(400).json({
+            msg: `El nombre debe contener solo letras y números`,
+        });
+    }
+    ;
+    if (!validator_1.default.isAlphanumeric(description)) {
+        return res.status(400).json({
+            msg: `El nombre debe contener solo letras y números`,
+        });
+    }
     try {
         const product = yield product_models_1.Product.findByPk(productId);
         if (!product) {

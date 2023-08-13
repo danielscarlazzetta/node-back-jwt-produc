@@ -16,11 +16,30 @@ exports.deleteUser = exports.updateUser = exports.getIdUsers = exports.loginUser
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const user_models_1 = require("../models/user.models");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const validator_1 = __importDefault(require("validator"));
 const newUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, username, password, email, phone, address, typeofuser } = req.body;
     const user = yield user_models_1.User.findOne({ where: { username: username } });
     const mail = yield user_models_1.User.findOne({ where: { email: email } });
     const hone = yield user_models_1.User.findOne({ where: { phone: phone } });
+    if (!validator_1.default.isAlphanumeric(name)) {
+        return res.status(400).json({
+            msg: `El nombre debe contener solo letras y números`,
+        });
+    }
+    ;
+    if (!validator_1.default.isAlphanumeric(username)) {
+        return res.status(400).json({
+            msg: `El username debe contener solo letras y números`,
+        });
+    }
+    ;
+    if (!validator_1.default.isAlphanumeric(address)) {
+        return res.status(400).json({
+            msg: `La direccion debe contener solo letras y números`,
+        });
+    }
+    ;
     const hashPassword = yield bcrypt_1.default.hash(password, 10);
     const existingFields = [];
     try {
@@ -61,6 +80,12 @@ exports.getAllUser = getAllUser;
 const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, password } = req.body;
     const userName = yield user_models_1.User.findOne({ where: { username: username } });
+    if (!validator_1.default.isAlphanumeric(username)) {
+        return res.status(400).json({
+            msg: `El nombre debe contener solo letras y números`,
+        });
+    }
+    ;
     try {
         if (!userName) {
             return res.status(400).json({
@@ -109,6 +134,24 @@ exports.getIdUsers = getIdUsers;
 const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = req.params.id;
     const { name, username, password, email, phone, address, typeofuser } = req.body;
+    if (!validator_1.default.isAlphanumeric(name)) {
+        return res.status(400).json({
+            msg: `El nombre debe contener solo letras y números`,
+        });
+    }
+    ;
+    if (!validator_1.default.isAlphanumeric(username)) {
+        return res.status(400).json({
+            msg: `El username debe contener solo letras y números`,
+        });
+    }
+    ;
+    if (!validator_1.default.isAlphanumeric(address)) {
+        return res.status(400).json({
+            msg: `La direccion debe contener solo letras y números`,
+        });
+    }
+    ;
     try {
         const user = yield user_models_1.User.findByPk(userId);
         if (!user) {
