@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import routesProduct from '../routes/product.routes';
 import routesUsers from '../routes/user.routes';
 import { Product } from './product.models';
@@ -31,7 +32,8 @@ class Server {
     }
 
     midlewares(){
-        this.app.use(express.json())
+        this.app.use(express.json());
+        this.app.use(cors());
     }
 
     async dbConnect(){ 

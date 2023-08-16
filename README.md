@@ -29,6 +29,8 @@
     -npm i --save-dev @types/bcrypt
     -npm i --save-dev @types/jsonwebtoken
 
+    -npm i --save-dev @types/cors
+
 # Instaladas las dependencias creamos la carpeta src y creamos un index.ts para realizar las pruebas de ts.
 
     - Ejecutamos node .\dist\index.js 
