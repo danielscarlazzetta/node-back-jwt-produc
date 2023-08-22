@@ -91,7 +91,7 @@ export const loginUser = async (req: Request, res: Response) => {
         }
 
         const token = jwt.sign({
-            username: username
+            username: username,
         }, process.env.SECRET_KEY || '634kjbOHs99hSSDkn', { expiresIn: '10000000'});//10000
 
         res.json({ token });
